@@ -2,9 +2,9 @@
 	"name": "aura-monorepo",
 	"version": "0.0.0",
 	"private": true,
-	"packageManager": "pnpm@8.6.0",
+	"packageManager": "pnpm@8.6.2",
 	"engines": {
-		"pnpm": "^8.6.0"
+		"pnpm": "^8.6.2"
 	},
 	"repository": {
 		"type": "git",
