@@ -1,0 +1,2 @@
+let binOp = (a: int | float, b: int | float, op: (int | float, int | float) -> float) -> 
+  op(a, b)
