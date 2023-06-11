@@ -1,0 +1,9 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+	block-size: 100vh;
+	block-size: 100dvh;
+	scroll-behavior: smooth;
+}

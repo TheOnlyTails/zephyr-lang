@@ -1,0 +1,25 @@
+{
+	"name": "aura-monorepo",
+	"version": "0.0.0",
+	"private": true,
+	"packageManager": "pnpm@8.6.0",
+	"engines": {
+		"pnpm": "^8.6.0"
+	},
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/TheOnlyTails/aura-lang.git"
+	},
+	"type": "module",
+	"scripts": {
+		"format": "pnpm format -r",
+		"check": "pnpm check -r",
+		"test": "pnpm test -r"
+	},
+	"devDependencies": {
+		"@changesets/cli": "^2.26.1",
+		"@total-typescript/ts-reset": "^0.4.2",
+		"prettier": "^2.8.8",
+		"typescript": "^5.1.3"
+	}
+}
