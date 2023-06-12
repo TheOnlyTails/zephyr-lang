@@ -76,8 +76,8 @@ importers:
         specifier: workspace:^
         version: link:../aura-lang
       daisyui:
-        specifier: ^3.0.22
-        version: 3.0.22(postcss@8.4.24)
+        specifier: ^3.1.0
+        version: 3.1.0(postcss@8.4.24)
       mdsvex:
         specifier: ^0.10.6
         version: 0.10.6(svelte@3.59.1)
@@ -1928,8 +1928,8 @@ packages:
       lodash-es: 4.17.21
     dev: true
 
-  /daisyui@3.0.22(postcss@8.4.24):
-    resolution: {integrity: sha512-2xdRxQUUB+O0Mcww65QMwwo0fjnos4JmyLhX6F4WxWTngjy9eYyxdQChtsJB3GUl0jNYdZfmnK48gJNyhMBX8Q==}
+  /daisyui@3.1.0(postcss@8.4.24):
+    resolution: {integrity: sha512-G4dz/bRZVvlhQ/FtezXSg0rXOXzDJ0PcnMqeLSwCYNWXxf46fNJ8LWeV5qwsYOdJbXiXoZLnwyy+BsNoWZ+Bjg==}
     engines: {node: '>=16.9.0'}
     peerDependencies:
       postcss: ^8
