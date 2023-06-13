@@ -61,8 +61,8 @@ importers:
   packages/aura-site:
     devDependencies:
       '@iconify/json':
-        specifier: ^2.2.76
-        version: 2.2.76
+        specifier: ^2.2.77
+        version: 2.2.77
       '@sveltejs/adapter-auto':
         specifier: ^2.1.0
         version: 2.1.0(@sveltejs/kit@1.20.2)
@@ -761,8 +761,8 @@ packages:
     requiresBuild: true
     dev: true
 
-  /@iconify/json@2.2.76:
-    resolution: {integrity: sha512-SXnvEurfutQ0ytXGxzQZ3TU1/vuYl1XoBIvAkvAVIlxu4qXiqSJQbXoZ+bATInKdeai/HuALcL0vAxUR5FLjOg==}
+  /@iconify/json@2.2.77:
+    resolution: {integrity: sha512-WRLDfAD90YHBDgsNLGmT2FSiESQExZdN5xozd+ux7OiT5nR7hYfEjUCWDeD+MsFn/V3pQgQZ4JDqvkVHP2KZnw==}
     dependencies:
       '@iconify/types': 2.0.0
       pathe: 1.1.1
