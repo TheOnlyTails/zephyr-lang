@@ -20,7 +20,7 @@
 		"format": "prettier -wc src/*"
 	},
 	"devDependencies": {
-		"@iconify/json": "^2.2.76",
+		"@iconify/json": "^2.2.77",
 		"@sveltejs/adapter-auto": "^2.1.0",
 		"@sveltejs/kit": "^1.20.2",
 		"@tailwindcss/typography": "^0.5.9",
