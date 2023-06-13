@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { Sidebar } from "$lib"
 
+	import "./syntax.css"
 	import Menu from "~icons/material-symbols/menu-rounded"
 
 	export let data
@@ -16,7 +17,7 @@
 	</aside>
 
 	<main class="drawer-content px-8 py-4">
-		<article class="flex items-center justify-between mb-4">
+		<nav class="flex items-center justify-between mb-4">
 			<label for="docs-sidebar" class="lg:hidden" aria-label="Open sidebar"><Menu /></label>
 
 			<ol class="list-none text-gray-500 flex gap-2">
@@ -27,14 +28,14 @@
 					<span>/</span>
 				{/each}
 			</ol>
-		</article>
+		</nav>
 
-		<div class="prose prose-sm md:prose-base">
+		<article class="main-content prose prose-sm md:prose-base">
 			<h1>
 				{currentPage.title}
 			</h1>
 
 			<slot />
-		</div>
+		</article>
 	</main>
 </section>

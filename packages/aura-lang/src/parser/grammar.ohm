@@ -23,6 +23,7 @@ Aura {
     | "(" ListOf<ClosureParam, ","> ","? ")" "->" Expression -- closure
     | "#[" ListOf<Expression, ","> ","? "]" -- list
     | "#{" ListOf<MapEntry, ","> ","? "}" -- map
+    | "#(" ListOf<Expression, ","> ","? ")" -- tuple
     | "@{" ListOf<ObjectEntry, ","> ","? "}" -- object
     | "(" Expression ")" -- parens
 
@@ -79,8 +80,10 @@ Aura {
     
     Type = 
       | NonemptyListOf<Type, "|"> -- union // union type, e.g. "int | string"
-      | "list" "<" Type ">" -- list // list type, e.g. "list<int>"
-      | "map" "<" Type "," Type ">" -- map // map type, e.g. "map<int, string>"
+      | "#[" Type "]" -- list // list type, e.g. "#[int]"
+      | "#{" Type ":" Type "}" -- map // map type, e.g. "#{ int: string }"
+      | "#(" ListOf<Type, ","> ","? ")" -- tuple // tuple type, e.g. "#(int, string)"
+      | "@{" ListOf<ObjectTypeEntry, ","> ","? "}" -- object // object type, e.g. "@{ a: int, b: string }"
       | "(" ListOf<Type, ","> ","? ")" "->" Type -- closure // closure type, e.g. "(int, int) -> int"
       | "int" -- int // 32 bit signed integer
       | "float" -- float // 64 bit floating point
@@ -90,4 +93,6 @@ Aura {
       | "void" -- void // no return value (only valid as return type), e.g. "(int) -> void"
       | identifier ("<" NonemptyListOf<Type, ","> ","? ">")? -- ident // user defined type, e.g. "MyType"
       | "(" Type ")" -- parens // parentheses, e.g. "(int)"
+
+    ObjectTypeEntry = identifier ":" Type
 }

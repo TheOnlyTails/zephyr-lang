@@ -14,7 +14,7 @@
 		"dev": "vitest",
 		"build": "unbuild",
 		"generate": "ohm generateBundles --withTypes 'src/**/*.ohm' --esm",
-		"generate:watch": "chokidar 'src/**/*.ohm' -c 'pnpm run watch'",
+		"generate:watch": "chokidar 'src/**/*.ohm' -c 'pnpm run generate'",
 		"format": "prettier -wc src/*",
 		"check": "prettier -c src/*",
 		"test": "vitest --run",

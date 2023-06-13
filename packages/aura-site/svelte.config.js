@@ -15,7 +15,10 @@ const rehypePlugins = [
 		linkHeadings,
 		{
 			behavior: "prepend",
-			content: {
+			/**
+			 * @type {import("rehype-autolink-headings").Options["content"]}
+			 */
+			content: (element) => ({
 				type: "element",
 				tagName: "span",
 				properties: {
@@ -26,10 +29,10 @@ const rehypePlugins = [
 				children: [
 					{
 						type: "text",
-						value: "#",
+						value: "#".repeat(Number(element.tagName.at(1) ?? 1)),
 					},
 				],
-			},
+			}),
 		},
 	],
 ]

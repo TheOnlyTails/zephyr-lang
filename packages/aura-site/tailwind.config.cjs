@@ -1,3 +1,5 @@
+// @ts-check
+
 const colors = require("tailwindcss/colors")
 
 /**
@@ -17,6 +19,9 @@ module.exports = {
 		"-mt-1",
 	],
 	plugins: [require("@tailwindcss/typography"), require("daisyui")],
+	daisyui: {
+		logs: false
+	},
 	theme: {
 		extend: {
 			colors: {

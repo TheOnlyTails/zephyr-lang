@@ -76,17 +76,32 @@ export const parse = <Ret extends "type" | "expr" | undefined = undefined>(
 					returnType: returnType.type(this.args.scope)
 				}
 			},
-			Type_list(_, _1, elementType, _2) {
+			Type_list(_, elementType, _1) {
 				return {
 					type: "list",
 					elementType: elementType.type(this.args.scope)
 				}
 			},
-			Type_map(_, _1, keyType, _2, valueType, _3) {
+			Type_map(_, keyType, _2, valueType, _3) {
 				return {
 					type: "map",
 					keyType: keyType.type(this.args.scope) as AuraType,
 					valueType: valueType.type(this.args.scope) as AuraType
+				}
+			},
+			Type_tuple(_, items, _1, _2) {
+				return {
+					type: "tuple",
+					items: items.asIteration().children.map(t => t.type(this.args.scope) as AuraType)
+				}
+			},
+			Type_object(_, fields, _1, _2) {
+				return {
+					type: "object",
+					fields: new Map(fields.asIteration().children.map(entry => [
+						entry.child(0).sourceString,
+						entry.child(2).type(this.args.scope) as AuraType
+					]))
 				}
 			},
 			Type_union(types) {
@@ -151,6 +166,12 @@ export const parse = <Ret extends "type" | "expr" | undefined = undefined>(
 					keyType: firstEntry?.child(0)?.typeOf(this.args.scope) ?? { type: "void" } as AuraType,
 					valueType: firstEntry?.child(2)?.typeOf(this.args.scope) ?? { type: "void" } as AuraType
 				} as AuraType
+			},
+			Expression_tuple(_, items, _1, _2) {
+				return {
+					type: "tuple",
+					items: items.asIteration().children.map(n => n.typeOf(this.args.scope) as AuraType)
+				}
 			},
 			Expression_object(_, fields, _2, _3) {
 				return {
@@ -308,6 +329,15 @@ export const parse = <Ret extends "type" | "expr" | undefined = undefined>(
 			}),
 			Expression_closure(_, params, _1, _2, _3, body) {
 				const closureScopeId = crypto.randomUUID()
+				const returnType = body.typeOf([...this.args.scope, closureScopeId]) as AuraType
+				const paramTypes = params.asIteration().children.map(n => n.child(2).type(this.args.scope) as AuraType)
+
+				env.bindings.set("recr", {
+					type: { type: "closure", params: paramsTypes, returnType },
+					scope: []
+					mutable: false,
+				})
+
 				return {
 					type: "closure",
 					params: new Map(
@@ -317,7 +347,7 @@ export const parse = <Ret extends "type" | "expr" | undefined = undefined>(
 							env.bindings.set(name, {
 								type: paramType,
 								value: { type: "identifier", name, valueType: paramType },
-								scope: [closureScopeId],
+								scope: [...this.args.scope, closureScopeId],
 								mutable: false
 							})
 
@@ -325,8 +355,8 @@ export const parse = <Ret extends "type" | "expr" | undefined = undefined>(
 						})
 					),
 					scopeId: closureScopeId,
-					returnType: body.typeOf(closureScopeId) as AuraType,
-					body: body.expr(closureScopeId) as AuraExpression
+					returnType: body.typeOf([...this.args.scope, closureScopeId]) as AuraType,
+					body: body.expr([...this.args.scope, closureScopeId]) as AuraExpression
 				}
 			},
 			Expression_list(_, elements, _1, _2) {
@@ -345,6 +375,14 @@ export const parse = <Ret extends "type" | "expr" | undefined = undefined>(
 							node.child(0).expr(this.args.scope) as AuraExpression,
 							node.child(2).expr(this.args.scope) as AuraExpression
 						])
+					)
+				}
+			},
+			Expression_tuple(_, items, _1, _2) {
+				return {
+					type: "tuple",
+					items: items.asIteration().children.map(node =>
+						node.expr(this.args.scope) as AuraExpression
 					)
 				}
 			},

@@ -10,6 +10,7 @@ export type AuraExpression =
 	| { type: "boolean"; value: boolean }
 	| { type: "list"; elements: AuraExpression[] }
 	| { type: "map"; entries: Map<AuraExpression, AuraExpression> }
+	| { type: "tuple"; items: AuraExpression[] }
 	| { type: "object"; fields: Map<string, AuraExpression> }
 	| {
 			type: "closure"
@@ -134,4 +135,8 @@ export type AuraType =
 	| {
 			type: "object"
 			fields: Map<string, AuraType>
+	  }
+	| {
+			type: "tuple"
+			items: AuraType[]
 	  }
