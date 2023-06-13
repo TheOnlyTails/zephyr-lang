@@ -26,7 +26,7 @@
 		"find-up": "^6.3.0",
 		"fuzzyfind": "^2.1.0",
 		"ohm-js": "^17.1.0",
-		"ts-pattern": "^4.3.0",
+		"ts-pattern": "^5.0.1",
 		"zod": "^3.21.4"
 	},
 	"devDependencies": {

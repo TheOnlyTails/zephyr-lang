@@ -36,8 +36,8 @@ importers:
         specifier: ^17.1.0
         version: 17.1.0
       ts-pattern:
-        specifier: ^4.3.0
-        version: 4.3.0
+        specifier: ^5.0.1
+        version: 5.0.1
       zod:
         specifier: ^3.21.4
         version: 3.21.4
@@ -6207,8 +6207,8 @@ packages:
     resolution: {integrity: sha512-Y/arvbn+rrz3JCKl9C4kVNfTfSm2/mEp5FSz5EsZSANGPSlQrpRI5M4PKF+mJnE52jOO90PnPSc3Ur3bTQw0gA==}
     dev: true
 
-  /ts-pattern@4.3.0:
-    resolution: {integrity: sha512-pefrkcd4lmIVR0LA49Imjf9DYLK8vtWhqBPA3Ya1ir8xCW0O2yjL9dsCVvI7pCodLC5q7smNpEtDR2yVulQxOg==}
+  /ts-pattern@5.0.1:
+    resolution: {integrity: sha512-ZyNm28Lsg34Co5DS3e9DVyjlX2Y+2exkI4jqTKyU+9/OL6Y2fKOOuL8i+7no71o74C6mVS+UFoP3ekM3iCT1HQ==}
     dev: false
 
   /tslib@2.5.3:
