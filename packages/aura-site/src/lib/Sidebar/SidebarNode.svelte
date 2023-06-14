@@ -5,6 +5,7 @@
 
 	export let entry: DocsPage | DocsTree
 	export let treeState: { [category: string]: boolean }
+	export let currentPath: string
 </script>
 
 {#if "pages" in entry}
@@ -18,21 +19,19 @@
 		<ul>
 			{#each entry.pages as page}
 				<li>
-					<svelte:self entry={page} bind:treeState />
+					<svelte:self {currentPath} entry={page} bind:treeState />
 				</li>
 			{/each}
 		</ul>
 	</details>
 {:else if (entry.published === false && dev) || entry.published === true || entry.published === undefined}
-	<a href="/docs{entry.path}">
+	<a class="max-w-[22ch]" class:active={currentPath === entry.path} href="/docs{entry.path}">
 		{#if entry.icon}
 			<DynamicIcon icon={entry.icon} />
 		{/if}
 		{entry.title}
 		{#if entry.published === false}
-			<div class="badge">
-				unpublished
-			</div>
+			<div class="badge">unpublished</div>
 		{/if}
 	</a>
 {/if}

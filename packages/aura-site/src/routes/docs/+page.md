@@ -1,5 +1,5 @@
 ---
-title: Aura Documentation
+title: Overview
 icon: developer-guide
 ---
 

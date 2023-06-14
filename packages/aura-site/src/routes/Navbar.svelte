@@ -24,8 +24,8 @@
   ] satisfies NavbarEntry[];
 </script>
 
-<nav class="navbar w-full h-14 bg-base-200 border-b border-b-divider">
-  <a href="/" class="btn btn-ghost text-2xl normal-case">Aura</a>
+<nav class="navbar sticky top-0 z-50 w-full h-14 bg-base-200 border-b border-b-divider">
+  <a href="/" class="btn hover:bg-transparent hover:border-transparent text-2xl normal-case">Aura</a>
 
   <ul class="menu menu-horizontal">
     {#each entries as { name, path, icon }}

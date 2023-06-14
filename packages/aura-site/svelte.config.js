@@ -8,6 +8,11 @@ import remarkGfm from "remark-gfm"
 import remarkGithub from "remark-github"
 import remarkMermaid from "remark-mermaidjs"
 import remarkEmoji from "remark-emoji"
+import { getHighlighter } from "shiki"
+
+const codeHighlighter = getHighlighter({
+	theme: "dark-plus",
+})
 
 const rehypePlugins = [
 	headingSlugs,
@@ -25,6 +30,7 @@ const rehypePlugins = [
 					className: [
 						"mr-1 opacity-20 hover:opacity-60 text-base font-bold inline-block align-middle relative -mt-1",
 					],
+					ariaLabel: "Link to header",
 				},
 				children: [
 					{
@@ -59,6 +65,26 @@ const config = {
 				remarkGithub,
 				remarkMermaid,
 			],
+			highlight: {
+				highlighter: async (code, lang) => {
+					const lines = Array.from(
+						(await codeHighlighter)
+							.codeToHtml(code, { lang })
+							.matchAll(/<span class="line">(.+)<\/span>/gm)
+					).flatMap((matches) => matches[1])
+
+					return `<div class="mockup-code not-prose">
+	${lines
+		.map(
+			(line, num) =>
+				`<pre class="not-prose" data-prefix="${num + 1}"><code>${line
+					.replaceAll("{", "&lcub;")
+					.replaceAll("}", "&rcub;")}</code></pre>`
+		)
+		.join("\n")}
+</div>`
+				},
+			},
 		}),
 		vitePreprocess(),
 	],

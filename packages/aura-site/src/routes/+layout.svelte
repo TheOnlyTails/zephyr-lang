@@ -3,6 +3,8 @@
 	import Navbar from "./Navbar.svelte"
 </script>
 
-<Navbar />
+<div class="flex flex-col">
+	<Navbar />
 
-<slot />
+	<slot />
+</div>
