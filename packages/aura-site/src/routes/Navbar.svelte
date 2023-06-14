@@ -16,11 +16,11 @@
       path: "/docs",
       icon: Book,
     },
-    {
-      name: "Playground",
-      path: "/playground",
-      icon: Toy,
-    },
+    // {
+    //   name: "Playground",
+    //   path: "/playground",
+    //   icon: Toy,
+    // },
   ] satisfies NavbarEntry[];
 </script>
 
