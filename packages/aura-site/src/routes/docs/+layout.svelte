@@ -35,7 +35,7 @@
 <section class="drawer min-h-no-navbar lg:drawer-open">
 	<input id="docs-sidebar-toggle" type="checkbox" class="drawer-toggle" />
 
-	<aside class="drawer-side top-16 h-no-navbar">
+	<aside class="drawer-side top-16 z-50 h-no-navbar">
 		<label for="docs-sidebar-toggle" class="drawer-overlay" />
 
 		<div class="flex flex-col items-stretch h-no-navbar bg-base-200 py-2">
