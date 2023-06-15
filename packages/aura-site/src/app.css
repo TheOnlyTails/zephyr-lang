@@ -3,7 +3,9 @@
 @tailwind utilities;
 
 body {
-	block-size: 100vh;
-	block-size: 100dvh;
-	scroll-behavior: smooth;
+	@apply m-0 min-h-screen w-full scroll-smooth;
+}
+
+picture {
+	@apply contents;
 }

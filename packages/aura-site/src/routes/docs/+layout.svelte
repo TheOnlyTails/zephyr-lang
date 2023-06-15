@@ -74,7 +74,7 @@
 		</div>
 	</aside>
 
-	<main class="drawer-content px-8 py-4">
+	<main class="drawer-content max-w-[100vw] px-8 py-4">
 		<nav class="flex items-center justify-between mb-4">
 			<label for="docs-sidebar-toggle" class="lg:hidden drawer-button" aria-label="Open sidebar">
 				<Menu />
@@ -101,7 +101,7 @@
 
 	<!-- svelte-ignore a11y-invalid-attribute -->
 	<div class="toast toast-end toast-bottom">
-		<a href="#" class="btn btn-neutral animate-none">
+		<a href="#" class="btn btn-neutral shadow-lg animate-none">
 			<ArrowUp /> Return to top
 		</a>
 	</div>
