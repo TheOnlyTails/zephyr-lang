@@ -18,8 +18,8 @@
 </script>
 
 <svelte:head>
-	<MetaTags 
-		title="Aura Docs · {currentPage.title}" 
+	<MetaTags
+		title="Aura Docs · {currentPage.title}"
 		openGraph={{
 			type: "article",
 			site_name: "Aura Lang",
@@ -102,7 +102,8 @@
 	<!-- svelte-ignore a11y-invalid-attribute -->
 	<div class="toast toast-end toast-bottom">
 		<a href="#" class="btn btn-neutral shadow-lg animate-none">
-			<ArrowUp /> Return to top
+			<ArrowUp />
+			Return to top
 		</a>
 	</div>
 </section>

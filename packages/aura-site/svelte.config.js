@@ -1,13 +1,12 @@
 import adapter from "@sveltejs/adapter-auto"
 import { vitePreprocess } from "@sveltejs/kit/vite"
-import { mdsvex } from "mdsvex"
-import { svelteShiki } from "svelte-shiki"
-import headingSlugs from "rehype-slug"
+import { mdsvex, compile } from "mdsvex"
 import linkHeadings from "rehype-autolink-headings"
+import headingSlugs from "rehype-slug"
+import remarkEmoji from "remark-emoji"
 import remarkGfm from "remark-gfm"
 import remarkGithub from "remark-github"
 import remarkMermaid from "remark-mermaidjs"
-import remarkEmoji from "remark-emoji"
 import { getHighlighter } from "shiki"
 
 const codeHighlighter = getHighlighter({
@@ -50,7 +49,6 @@ const config = {
 	// Consult https://kit.svelte.dev/docs/integrations#preprocessors
 	// for more information about preprocessors
 	preprocess: [
-		svelteShiki(),
 		mdsvex({
 			extension: ".md",
 			rehypePlugins,
@@ -65,24 +63,35 @@ const config = {
 				remarkGithub,
 				remarkMermaid,
 			],
+			// layout: "./src/routes/docs/PageLayout.svelte",
 			highlight: {
 				highlighter: async (code, lang) => {
 					const lines = Array.from(
 						(await codeHighlighter)
 							.codeToHtml(code, { lang })
 							.matchAll(/<span class="line">(.+)<\/span>/gm)
-					).flatMap((matches) => matches[1])
+					).flatMap((matches) =>
+						matches[1]
+							.replaceAll(/{/g, "&#123;")
+							.replaceAll(/}/g, "&#125;")
+							.replaceAll(/`/g, "&#96;")
+							.replaceAll(/\\/g, "&#92;")
+					)
 
-					return `<div class="mockup-code not-prose">
-	${lines
-		.map(
-			(line, num) =>
-				`<pre class="not-prose" data-prefix="${num + 1}"><code>${line
-					.replaceAll("{", "&lcub;")
-					.replaceAll("}", "&rcub;")}</code></pre>`
-		)
-		.join("\n")}
-</div>`
+					const rawCode = encodeURIComponent(code)
+
+					// this is such a hack, but i cannot for the life of me figure out
+					// another way to do this
+					return `{#await import("$lib/CodeMockup.svelte") then { default: CodeMockup }}
+	<CodeMockup content={${JSON.stringify(lines)}} raw={\`${rawCode}\`} />
+{:catch error}
+	<div class="mockup-code">
+		<pre data-prefix={1} class="bg-error text-error-content">
+			<code>Could not import the code mockup component: {error.message}</code>
+		</pre>
+	</div>
+{/await}
+`
 				},
 			},
 		}),

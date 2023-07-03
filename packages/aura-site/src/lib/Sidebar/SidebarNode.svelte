@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { dev } from "$app/environment"
-	import { DynamicIcon } from "$lib"
 	import type { DocsPage, DocsTree } from "../../routes/docs/types"
 
 	export let entry: DocsPage | DocsTree
@@ -26,9 +25,6 @@
 	</details>
 {:else if (entry.published === false && dev) || entry.published === true || entry.published === undefined}
 	<a class="max-w-[22ch]" class:active={currentPath === entry.path} href="/docs{entry.path}">
-		{#if entry.icon}
-			<DynamicIcon icon={entry.icon} />
-		{/if}
 		{entry.title}
 		{#if entry.published === false}
 			<div class="badge">unpublished</div>

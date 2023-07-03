@@ -1,8 +1,11 @@
 <script context="module" lang="ts">
+	import type { SvelteComponent } from "svelte"
+	import type { SvelteHTMLElements } from "svelte/elements"
+
 	export type NavbarEntry = {
 		name: string
 		path: string
-		icon: any
+		icon: typeof SvelteComponent<SvelteHTMLElements["svg"]>
 	}
 </script>
 
@@ -45,8 +48,8 @@
 	<a
 		href="https://github.com/theonlytails/aura-lang"
 		class="btn btn-ghost text-lg btn-circle flex-none"
-    title="GitHub Repo"
-    aria-label="GitHub Repo"
+		title="GitHub Repo"
+		aria-label="GitHub Repo"
 		{...externalLink}
 	>
 		<Github />

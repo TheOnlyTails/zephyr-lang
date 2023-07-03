@@ -1,6 +1,5 @@
 export type DocsMetadata = {
 	title: string
-	icon?: string
 	published?: boolean
 }
 

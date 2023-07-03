@@ -1,5 +1,6 @@
 import { error } from "@sveltejs/kit"
 import type { DocsCategory, DocsMetadata, DocsPage, DocsTree } from "./types"
+import type { LayoutServerLoad } from "./$types"
 
 const pagePathTrim = /\.((\/[\w-]+)+)\/\+page\.md/
 const categoryPathTrim = /\.((\/[\w-]+)+)\/category\.ts/
@@ -46,7 +47,7 @@ const getTree = (pages: DocsPage[]) => {
 const docsPages = getPages()
 const docsTree = getTree(docsPages)
 
-export const load = async ({ route, url }) => {
+export const load: LayoutServerLoad = async ({ route, url }) => {
 	const currentPage = docsPages.find((page) => "/docs" + page.path === route.id)
 	if (!currentPage) throw error(404, `Couldn't find a docs page in ${url}.`)
 
