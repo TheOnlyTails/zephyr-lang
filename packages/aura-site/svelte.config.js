@@ -63,7 +63,7 @@ const config = {
 				remarkGithub,
 				remarkMermaid,
 			],
-			// layout: "./src/routes/docs/PageLayout.svelte",
+			layout: "./src/routes/docs/PageLayout.svelte",
 			highlight: {
 				highlighter: async (code, lang) => {
 					const lines = Array.from(
@@ -82,16 +82,7 @@ const config = {
 
 					// this is such a hack, but i cannot for the life of me figure out
 					// another way to do this
-					return `{#await import("$lib/CodeMockup.svelte") then { default: CodeMockup }}
-	<CodeMockup content={${JSON.stringify(lines)}} raw={\`${rawCode}\`} />
-{:catch error}
-	<div class="mockup-code">
-		<pre data-prefix={1} class="bg-error text-error-content">
-			<code>Could not import the code mockup component: {error.message}</code>
-		</pre>
-	</div>
-{/await}
-`
+					return `<Components.CodeMockup content={${JSON.stringify(lines)}} raw={\`${rawCode}\`} />`
 				},
 			},
 		}),
