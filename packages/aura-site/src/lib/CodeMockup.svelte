@@ -14,7 +14,7 @@
 		<pre data-prefix={i + 1}><code>{@html line}</code></pre>
 	{/each}
 	<button
-		class="btn btn-circle btn-outline hidden group-hover:inline-flex absolute top-4 right-4"
+		class="btn btn-sm btn-outline btn-circle hidden group-hover:inline-flex absolute top-4 right-4"
 		on:click={() => {
 			navigator.clipboard.writeText(decodeURIComponent(raw))
 			copied = true
