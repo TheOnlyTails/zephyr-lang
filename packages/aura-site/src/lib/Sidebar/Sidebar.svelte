@@ -8,7 +8,7 @@
 	let treeState: { [category: string]: boolean } = {}
 </script>
 
-<nav class="menu">
+<nav class="menu gap-2">
 	<li>
 		<header class="menu-title text-center">Docs Menu</header>
 	</li>

@@ -9,11 +9,3 @@ body {
 picture {
 	@apply contents;
 }
-
-.mockup-code pre[data-prefix] {
-	@apply transition-colors;
-
-	&:hover {
-		background-color: hsl(var(--nf) / var(--tw-bg-opacity));
-	}
-}

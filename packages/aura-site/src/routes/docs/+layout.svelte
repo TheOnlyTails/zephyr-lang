@@ -1,16 +1,21 @@
 <script lang="ts">
-	import { MetaTags } from "svelte-meta-tags"
 	import { page } from "$app/stores"
 	import { Sidebar } from "$lib"
 	import { externalLink } from "$lib/utils"
+	import { MetaTags } from "svelte-meta-tags"
 	import TableOfContents from "./TableOfContents.svelte"
 
+	import ArrowUp from "~icons/material-symbols/arrow-upward"
 	import Menu from "~icons/material-symbols/menu-rounded"
 	import Github from "~icons/mdi/github"
-	import ArrowUp from "~icons/material-symbols/arrow-upward"
 
 	export let data
 	$: ({ tree, currentPage } = data)
+
+	export const snapshot = {
+		capture: () => ({ $currentSidebarTab: currentSidebarTab	}),
+		restore: ({ $currentSidebarTab }) => currentSidebarTab = $currentSidebarTab
+	}
 
 	let currentSidebarTab: "docs" | "toc" = "docs"
 

@@ -26,11 +26,13 @@ Integers may only be whole, signed numbers, and floats are 64-bit precision floa
 
 There are 2 ways to handle text in Aura; There's characters, which are a single 
 [unicode codepoint](https://en.wikipedia.org/wiki/Code_point), and strings, which are lists of characters.
+Character literals may only contain a single character, otherwise a compile-time error is thrown.
 
 <!-- prettier-ignore -->
 ```ts
 "Hello world!" /* : string */
 'a' /* : char */
+'abc' // ERROR
 ```
 
 Characters which are 2-codepoint long (mainly emojis and other complex characters) must be contained 

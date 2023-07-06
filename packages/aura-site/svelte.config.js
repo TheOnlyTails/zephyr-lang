@@ -66,23 +66,41 @@ const config = {
 			layout: "./src/routes/docs/PageLayout.svelte",
 			highlight: {
 				highlighter: async (code, lang) => {
+					const specialLines = code.split("\n").map(line => {
+						if (line.endsWith("// WARN")) return "warning"
+						if (line.endsWith("// ERROR")) return "error"
+						if (line.endsWith("// SUCCESS")) return "success"
+						if (line.endsWith("// INFO")) return "info"
+						return null
+					})
+
+					code = code.replace(/ \/\/ (WARN|ERROR|SUCESS|INFO)$/, "")
+
 					const lines = Array.from(
 						(await codeHighlighter)
 							.codeToHtml(code, { lang })
 							.matchAll(/<span class="line">(.+)<\/span>/gm)
 					).flatMap((matches) =>
 						matches[1]
-							.replaceAll(/{/g, "&#123;")
-							.replaceAll(/}/g, "&#125;")
-							.replaceAll(/`/g, "&#96;")
-							.replaceAll(/\\/g, "&#92;")
-					)
+							.replace(/{/g, "&lcub;")
+							.replace(/}/g, "&rcub;")
+							.replace(/`/g, "&DiacriticalGrave;")
+							.replace(/\\/g, "&Backslash;")
+					).map((line, i) => {
+						switch (specialLines[i]) {
+							case "info": 
+							case "warning":
+							case "error":
+							case "success":
+								return line.replace(/<span style="color: #[\dA-F]{6}">/g, `<span>`)
+							default:
+								return line
+						}
+					})
 
 					const rawCode = encodeURIComponent(code)
 
-					// this is such a hack, but i cannot for the life of me figure out
-					// another way to do this
-					return `<Components.CodeMockup content={${JSON.stringify(lines)}} raw={\`${rawCode}\`} />`
+					return `<Components.CodeMockup content={${JSON.stringify(lines)}} raw={\`${rawCode}\`} specialLines={${JSON.stringify(specialLines)}} />`
 				},
 			},
 		}),
