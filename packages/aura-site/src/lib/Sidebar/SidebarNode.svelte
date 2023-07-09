@@ -3,14 +3,18 @@
 	import type { DocsPage, DocsTree } from "../../routes/docs/types"
 
 	export let entry: DocsPage | DocsTree
-	export let treeState: { [category: string]: boolean }
+	export let treeState: typeof entry["path"][]
 	export let currentPath: string
 </script>
 
 {#if "pages" in entry}
 	<details
-		open={treeState[entry.path]}
-		on:toggle={() => (treeState[entry.path] = !treeState[entry.path])}
+		open={treeState?.includes?.(entry.path) ?? false}
+		on:toggle={() => { 
+			if (treeState.includes(entry.path)) treeState = treeState.filter(p => p === entry.path)
+			else treeState.push(entry.path)
+			treeState = treeState
+		}}
 	>
 		<summary>
 			{entry.title}

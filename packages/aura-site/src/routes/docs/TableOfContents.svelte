@@ -23,19 +23,21 @@
 {#if article}
 	{#key $page}
 		<nav class="table-of-contents menu">
-			<li>
-				<header class="menu-title text-center">Table of Contents</header>
-			</li>
 			<ul>
 				{#each headings as { tagName, innerText, id }}
+					{@const hLevel = Number(tagName[1])}
 					<li>
 						<a
-							class="max-w-[22ch]"
 							class:active={activeHeading?.id === id}
+							class:font-bold={hLevel === 1}
+							class:text-xl={hLevel === 1}
+							class:font-semibold={hLevel === 2}
+							class:text-lg={hLevel === 2}
 							href="#{id}"
-							style:--heading-level={`"${"#".repeat(Number(tagName[1]))}"`}
+							style:--heading-level="'{"#".repeat(hLevel)}'"
+							class="before:content-[--heading-level] before:text-base before:font-bold before:opacity-20 before:hover:opacity-60"
 						>
-							{innerText.replace(/#+/, "")}
+							{innerText.replace(/^#+/, "")}
 						</a>
 					</li>
 				{/each}
@@ -43,14 +45,3 @@
 		</nav>
 	{/key}
 {/if}
-
-<style lang="postcss">
-	a::before {
-		@apply text-base font-bold opacity-20;
-		content: var(--heading-level);
-
-		&:hover {
-			@apply opacity-60;
-		}
-	}
-</style>
