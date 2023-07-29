@@ -1,0 +1,24 @@
+{
+  "name": "aura",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vitepress dev docs",
+    "build": "vitepress build docs",
+    "serve": "vitepress serve docs"
+  },
+  "devDependencies": {
+    "lightningcss": "^1.21.5",
+    "vite": "^4.4.7",
+    "vitepress": "1.0.0-beta.7",
+    "vue": "3.3.4"
+  },
+  "pnpm": {
+    "peerDependencyRules": {
+      "ignoreMissing": [
+        "@algolia/client-search"
+      ]
+    }
+  }
+}

@@ -1,0 +1,38 @@
+name: aura-lang
+version: 0.1.0
+synopsis: A simple programming language.
+homepage: https://aura-lang.vercel.app/
+author: TheOnlyTails <theonlytails@theonlytails.com>
+github: theonlytails/aura-lang
+category: Development
+extra-doc-files:
+  CHANGELOG.md
+language: GHC2021
+
+dependencies: 
+  - base >= 4.18.0.0
+  - containers
+  - text
+  - array
+  - megaparsec
+  - parser-combinators
+
+library:
+  source-dirs: packages/aura-lang/src
+  exposed-modules:
+    - Aura
+  other-modules:
+    - Parser
+    - Parser.AST
+    - Parser.Lexer
+    - Parser.Error
+    - Utils
+
+executable:
+  source-dirs: packages/aura-lang/exe
+  main: Main.hs
+
+tests:
+  aura-lang-test:
+    source-dirs: packages/aura-lang/test
+    main: Main.hs

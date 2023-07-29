@@ -1,0 +1,25 @@
+:root {
+  --vp-c-brand: #af3dcb;
+  --vp-c-brand-light: color-mix(in lch, var(--vp-c-brand) 90%, white);
+  --vp-c-brand-lighter: color-mix(in lch, var(--vp-c-brand) 80%, white);
+  --vp-c-brand-dark: color-mix(in lch, var(--vp-c-brand) 90%, black);
+  --vp-c-brand-darker: color-mix(in lch, var(--vp-c-brand) 80%, black);
+
+  --vp-button-brand-border: var(--vp-c-brand-light);
+  --vp-button-brand-text: var(--vp-c-text-dark-1);
+  --vp-button-brand-bg: var(--vp-c-brand);
+  --vp-button-brand-hover-border: var(--vp-c-brand-light);
+  --vp-button-brand-hover-text: var(--vp-c-text-dark-1);
+  --vp-button-brand-hover-bg: var(--vp-c-brand-light);
+  --vp-button-brand-active-border: var(--vp-c-brand-light);
+  --vp-button-brand-active-text: var(--vp-c-text-dark-1);
+  --vp-button-brand-active-bg: var(--vp-button-brand-bg);
+
+  @media (min-width: 640px) {
+    --vp-home-hero-image-filter: blur(56px);
+  }
+
+  @media (min-width: 960px) {
+    --vp-home-hero-image-filter: blur(72px);
+  }
+}

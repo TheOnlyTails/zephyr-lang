@@ -1,0 +1,74 @@
+cabal-version: 1.18
+
+-- This file has been generated from package.yaml by hpack version 0.35.2.
+--
+-- see: https://github.com/sol/hpack
+
+name:           aura-lang
+version:        0.1.0
+synopsis:       A simple programming language.
+category:       Development
+homepage:       https://aura-lang.vercel.app/
+bug-reports:    https://github.com/theonlytails/aura-lang/issues
+author:         TheOnlyTails <theonlytails@theonlytails.com>
+maintainer:     TheOnlyTails <theonlytails@theonlytails.com>
+license:        MIT
+license-file:   LICENSE
+build-type:     Simple
+extra-doc-files:
+    CHANGELOG.md
+
+source-repository head
+  type: git
+  location: https://github.com/theonlytails/aura-lang
+
+library
+  exposed-modules:
+      Aura
+  other-modules:
+      Parser
+      Parser.AST
+      Parser.Lexer
+      Parser.Error
+      Utils
+  hs-source-dirs:
+      packages/aura-lang/src
+  build-depends:
+      array
+    , base >=4.18.0.0
+    , containers
+    , megaparsec
+    , parser-combinators
+    , text
+  default-language: GHC2021
+
+executable aura-lang
+  main-is: Main.hs
+  other-modules:
+      Paths_aura_lang
+  hs-source-dirs:
+      packages/aura-lang/exe
+  build-depends:
+      array
+    , base >=4.18.0.0
+    , containers
+    , megaparsec
+    , parser-combinators
+    , text
+  default-language: GHC2021
+
+test-suite aura-lang-test
+  type: exitcode-stdio-1.0
+  main-is: Main.hs
+  other-modules:
+      Paths_aura_lang
+  hs-source-dirs:
+      packages/aura-lang/test
+  build-depends:
+      array
+    , base >=4.18.0.0
+    , containers
+    , megaparsec
+    , parser-combinators
+    , text
+  default-language: GHC2021

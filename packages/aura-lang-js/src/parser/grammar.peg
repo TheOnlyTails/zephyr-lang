@@ -1,0 +1,92 @@
+program := '(let_expr \n?)'*
+
+expression :=
+  expression '(' '(expression ,)*' 'expression'? ')'
+  | '{' (expression ';')* expression? '}'
+  | 'let' 'mut'? identifier (':' Type)? '=' expression
+  | 'if' '(' Expression ')' Expression ('else' Expression)?
+  | 'while' '(' Expression ')' Expression
+  | 'for' '(' identifier 'in' Expression ')' Expression
+  | 'import' importPath ('with' '(' ListOf<ImportIdent, ','> ','? ')')?
+  | Expression 'as' Type
+  | Expression 'is' Type
+  | unaryPrefixOperator Expression
+  | Expression unaryPostfixOperator
+  | Expression binaryOperator Expression
+  | ('true' | 'false')
+  | identifier
+  | float
+  | int
+  | char
+  | string
+  | '(' ListOf<ClosureParam, ','> ','? ')' '->' Expression
+  | '#[' ListOf<Expression, ','> ','? ']'
+  | '#{' ListOf<MapEntry, ','> ','? '}'
+  | '#(' ListOf<Expression, ','> ','? ')'
+  | '@{' ListOf<ObjectEntry, ','> ','? '}'
+  | '(' Expression ')'
+
+int_expr := digit (digit | '_')*
+float_expr := digit (digit | '_')* '.' digit (digit | '_')*
+char_expr := '\'' (unicodeChar+ | escapeSequence | any) '\''
+string_expr := '"' '(unicodeChar | escapeSequence | )'* '"'
+escapeSequence := '\\' ('n' | 'r' | 't' | '\'' | '"' | '\\')
+unicodeChar := '\\u' '[\da-fA-F]'[4]
+
+identifier := letter (alphanum | '_')*
+
+ClosureParam := identifier ':' Type
+
+MapEntry := Expression ':' Expression
+
+ObjectEntry := identifier ':' Expression
+
+binaryOperator :=
+    '\+'
+  | '\+=' 
+  | '-' 
+  | '-=' 
+  | '\*' 
+  | '\*=' 
+  | '/' 
+  | '/=' 
+  | '%' 
+  | '%=' 
+  | '\*\*' 
+  | '\*\*=' 
+  | '==' 
+  | '!=' 
+  | '<' 
+  | '<=' 
+  | '>' 
+  | '>=' 
+  | '&&' 
+  | '||' 
+  | 'in' 
+  | '!in' 
+  | '='
+
+unaryPrefixOperator := '!' | '-' 
+
+postfixOperator := '\+\+' | '--'
+
+ImportIdent := identifier ('as' identifier)?
+importPath := '\'[^\']\''
+
+Type :=
+  (Type '|')* Type -- union // union type, e.g. 'int | string'
+  | '#[' Type ']' -- list // list type, e.g. '#[int]'
+  | '#{' Type ':' Type '}' -- map // map type, e.g. '#{ int: string }'
+  | '#(' ListOf<Type, ','> ','? ')' -- tuple // tuple type, e.g. '#(int, string)'
+  | '@{' ListOf<ObjectTypeEntry, ','> ','? '}' -- object // object type, e.g. '@{ a: int, b: string }'
+  | '(' ListOf<Type, ','> ','? ')' '->' Type -- closure // closure type, e.g. '(int, int) -> int'
+  | 'int' -- int // 32 bit signed integer
+  | 'float' -- float // 64 bit floating point
+  | 'char' -- char // UTF-8 character
+  | 'string' -- string // UTF-8 string
+  | 'boolean' -- boolean // true or false
+  | 'void' -- void // no return value (only valid as return type), e.g. '(int) -> void'
+  | identifier ('<' NonemptyListOf<Type, ','> ','? '>')? -- ident // user defined type, e.g. 'MyType'
+  | '(' Type ')' -- parens // parentheses, e.g. '(int)'
+
+ObjectTypeEntry := identifier ':' Type

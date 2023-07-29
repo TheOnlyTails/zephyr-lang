@@ -1,0 +1,31 @@
+{
+	"compilerOptions": {
+		"lib": [
+			"ESNext"
+		],
+		"types": [
+			"@total-typescript/ts-reset",
+			"@types/node"
+		],
+		"module": "esnext",
+		"target": "esnext",
+		"moduleResolution": "node",
+		"useDefineForClassFields": true,
+		"skipLibCheck": true,
+		"verbatimModuleSyntax": true,
+		/* Bundler mode */
+		"resolveJsonModule": true,
+		"isolatedModules": true,
+		"noEmit": true,
+		"allowImportingTsExtensions": true,
+		"allowJs": true,
+		/* Linting */
+		"strict": true,
+		"noFallthroughCasesInSwitch": true,
+		"noErrorTruncation": true,
+		"allowSyntheticDefaultImports": true
+	},
+	"include": [
+		"src"
+	]
+}
