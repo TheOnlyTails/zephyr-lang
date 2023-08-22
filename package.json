@@ -9,9 +9,9 @@
     "serve": "vitepress serve docs"
   },
   "devDependencies": {
-    "lightningcss": "^1.21.5",
-    "vite": "^4.4.7",
-    "vitepress": "1.0.0-beta.7",
+    "lightningcss": "^1.21.7",
+    "vite": "^4.4.9",
+    "vitepress": "1.0.0-rc.4",
     "vue": "3.3.4"
   },
   "pnpm": {

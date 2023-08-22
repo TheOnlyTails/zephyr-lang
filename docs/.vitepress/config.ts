@@ -24,7 +24,7 @@ export default defineConfig({
 					},
 					{
 						text: "Contributing",
-						link: "https://github.com/theonlytails/aura-lang/blob/main/CONTRIBUTING.md"
+						link: "https://github.com/theonlytails/zephyr-lang/blob/main/CONTRIBUTING.md"
 					}
 				]
 			}
@@ -40,6 +40,6 @@ export default defineConfig({
 	lastUpdated: true,
 	cleanUrls: true,
 	sitemap: {
-		hostname: "https://aura-lang.vercel.app"
+		hostname: "https://zephyr-lang.vercel.app"
 	}
 })
