@@ -1,0 +1,19 @@
+[package]
+name = "zephyr-lang"
+version = "0.1.0"
+edition = "2021"
+authors = ["TheOnlyTails"]
+license = "MIT"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+color-eyre = "0.6.2"
+itertools = "0.11.0"
+lazy_static = "1.4.0"
+ordered-float = "3.7.0"
+pest = "2.7.1"
+pest_derive = "2.7.1"
+regex = "1.9.1"
+thiserror = "1.0.44"
+unescape = "0.1.0"

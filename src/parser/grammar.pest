@@ -1,0 +1,198 @@
+program    =  { SOI ~ let_expr* ~ EOI }
+WHITESPACE = _{ WHITE_SPACE | NEWLINE }
+COMMENT    = _{ ("//" ~ ANY*) | ("/*" ~ (ANY*) ~ "*/") }
+
+expr = { (prefix? ~ primary ~ postfix?) ~ (infix ~ (prefix? ~ primary ~ postfix?))* }
+// this is only here so i can parse one expr at a time
+single_expr = { SOI ~ expr ~ EOI }
+
+primary = {
+    cast
+  | type_check
+  | float
+  | integer
+  | char
+  | string
+  | boolean
+  | list
+  | map
+  | tuple
+  | object
+  | closure
+  | call
+  | assignment
+  | identifier
+  | let_expr
+  | if_expr
+  | while_expr
+  | for_expr
+  | import
+  | parens
+}
+
+float       = @{ decimal_int ~ "." ~ decimal_int ~ exponent? }
+integer     = @{ (hex_int | octal_int | binary_int | decimal_int) ~ exponent? }
+decimal_int = @{ ASCII_DIGIT ~ (ASCII_DIGIT | "_")* }
+binary_int  = @{ "0b" ~ (ASCII_BIN_DIGIT | "_")* ~ ASCII_BIN_DIGIT ~ (ASCII_BIN_DIGIT | "_")* }
+octal_int   = @{ "0o" ~ (ASCII_OCT_DIGIT | "_")* ~ ASCII_OCT_DIGIT ~ (ASCII_OCT_DIGIT | "_")* }
+hex_int     = @{ "0x" ~ (ASCII_HEX_DIGIT | "_")* ~ ASCII_HEX_DIGIT ~ (ASCII_HEX_DIGIT | "_")* }
+exponent    = @{ ("e" ~ decimal_int) }
+
+string            = ${ "\"" ~ inner_string ~ "\"" }
+char              = ${ "\'" ~ text_literal_char ~ "\'" }
+inner_string      = @{ text_literal_char* }
+text_literal_char =  {
+    !("\"" | "\\" | "\'") ~ ANY
+  | "\\" ~ ("\"" | "\\" | "\'" | "b" | "f" | "n" | "r" | "t")
+  | "\\u" ~ ASCII_HEX_DIGIT{4, 6}
+  | "\\x" ~ (ASCII_OCT_DIGIT ~ ASCII_HEX_DIGIT)
+}
+
+boolean    = _{ true_bool | false_bool }
+true_bool  =  { "true" }
+false_bool =  { "false" }
+
+list         = { "#[" ~ (expr ~ ",")* ~ expr? ~ "]" }
+map          = { "#{" ~ (map_entry ~ ",")* ~ map_entry? ~ "}" }
+map_entry    = { expr ~ "=" ~ expr }
+tuple        = { "#(" ~ (expr ~ ",")* ~ expr? ~ ")" }
+object       = { "@{" ~ (object_entry ~ ",")* ~ object_entry? ~ "}" }
+object_entry = { mutable? ~ identifier ~ (":" ~ type_def)? ~ "=" ~ expr }
+
+closure       = { "(" ~ (closure_param ~ ",")* ~ closure_param? ~ ")" ~ (":" ~ type_def)? ~ "->" ~ expr }
+closure_param = { identifier ~ ":" ~ type_def }
+
+call = { term ~ "(" ~ (expr ~ ",")* ~ expr? ~ ")" }
+
+let_expr = { "let" ~ mutable? ~ identifier ~ (":" ~ type_def)? ~ "=" ~ expr }
+mutable  = { "mut" }
+
+if_expr    = { "if" ~ "(" ~ expr ~ ")" ~ expr ~ ("else" ~ expr)? }
+while_expr = { "while" ~ "(" ~ expr ~ ")" ~ expr }
+for_expr   = { "for" ~ "(" ~ identifier ~ "in" ~ expr ~ ")" ~ expr }
+
+import               = { "import" ~ string ~ import_idents_clause? }
+import_idents_clause = { "with" ~ "(" ~ ((import_ident ~ ",")* ~ import_ident?) ~ ")" }
+import_ident         = { identifier ~ ("as" ~ identifier)? }
+cast                 = { term ~ "as" ~ type_def }
+type_check           = { term ~ "is" ~ type_def }
+
+code_block = { "{" ~ ((expr ~ ("\n" | ";"))* ~ expr?) ~ "}" }
+
+term   = { identifier | float | integer | char | string | boolean | list | map | tuple | object | closure | parens }
+parens = { "(" ~ expr ~ ")" }
+
+assignment     =  { identifier ~ assign_op ~ expr }
+assign_op      = _{
+    assign
+  | plus_assign
+  | minus_assign
+  | power_assign
+  | times_assign
+  | divide_assign
+  | modulus_assign
+  | and_assign
+  | or_assign
+}
+assign         =  { "=" }
+plus_assign    =  { "+=" }
+minus_assign   =  { "-=" }
+times_assign   =  { "*=" }
+divide_assign  =  { "/=" }
+modulus_assign =  { "%=" }
+power_assign   =  { "**=" }
+and_assign     =  { "&&=" }
+or_assign      =  { "||=" }
+
+type_def     = { (type_primary ~ "|")* ~ type_primary }
+type_primary = {
+    int_type
+  | float_type
+  | string_type
+  | char_type
+  | boolean_type
+  | void_type
+  | list_type
+  | map_type
+  | tuple_type
+  | object_type
+  | closure_type
+  | "(" ~ type_def ~ ")"
+}
+
+int_type     = { "int" }
+float_type   = { "float" }
+string_type  = { "string" }
+char_type    = { "char" }
+boolean_type = { "boolean" }
+void_type    = { "void" }
+
+list_type         = { "#[" ~ type_def ~ "]" }
+map_type          = { "#{" ~ type_def ~ ":" ~ type_def ~ "}" }
+tuple_type        = { "#(" ~ (type_def* ~ ",") ~ type_def? ~ ")" }
+object_type       = { "@{" ~ (object_type_entry ~ ",")* ~ object_type_entry? ~ "}" }
+object_type_entry = { identifier ~ ":" ~ type_def }
+closure_type      = { "(" ~ (type_def ~ ",")* ~ type_def? ~ ")" ~ "->" ~ type_def }
+
+infix          = _{
+    in_op
+  | not_in
+  | not_equals
+  | equals
+  | plus
+  | minus
+  | power
+  | times
+  | divide
+  | modulus
+  | less_equals
+  | less_than
+  | greater_equals
+  | greater_than
+  | and
+  | or
+}
+in_op          =  { "in" }
+not_in         =  { "!in" }
+not_equals     =  { "!=" }
+equals         =  { "==" }
+plus           =  { "+" }
+minus          =  { "-" }
+times          =  { "*" }
+divide         =  { "/" }
+modulus        =  { "%" }
+power          =  { "**" }
+less_equals    =  { "<=" }
+less_than      =  { "<" }
+greater_equals =  { ">=" }
+greater_than   =  { ">" }
+and            =  { "&&" }
+or             =  { "||" }
+
+prefix = _{ not | negate }
+not    =  { "!" }
+negate =  { "-" }
+
+postfix   = _{ increment | decrement }
+increment =  { "++" }
+decrement =  { "--" }
+
+identifier    = @{ !reserved_name ~ XID_START ~ XID_CONTINUE* }
+reserved_name = @{
+    "let"
+  | "mut"
+  | "if"
+  | "while"
+  | "for"
+  | "import"
+  | "with"
+  | "in"
+  | "as"
+  | "is"
+  | "int"
+  | "float"
+  | "string"
+  | "char"
+  | "boolean"
+  | "void"
+}

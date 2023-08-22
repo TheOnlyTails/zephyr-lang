@@ -1,0 +1,9 @@
+let int = 1
+let float = 1.23
+let char = 'a'
+let string = "hello"
+let boolean = true
+let list = #[1, 2, 3]
+let map = #{'a' = 1, 'b' = 2, 'c' = 3}
+let object = @{ a = 1, b = 2, c = 3 }
+let closure = (msg: string) -> println(msg)

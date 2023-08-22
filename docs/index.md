@@ -2,8 +2,8 @@
 layout: home
 
 hero:
-  name: Aura
-  text: Simple Language
+  name: Zephyr
+  text: Programming Language
   tagline: A toy programming language focused on simplicity.
 
   actions:

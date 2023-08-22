@@ -1,6 +1,0 @@
-indentation: 2
-column-limit: 100
-record-brace-space: true
-haddock-style: single-line
-let-style: inline
-respectful: false

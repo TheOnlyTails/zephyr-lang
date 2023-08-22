@@ -2,7 +2,7 @@
 title: Literals
 ---
 
-In Aura, everything is an expression, so it can evaluate to a value.
+In Zephyr, everything is an expression, so it can evaluate to a value.
 
 ## Literals
 
@@ -24,7 +24,7 @@ Integers may only be whole, signed numbers, and floats are 64-bit precision floa
 
 ### Text
 
-There are 2 ways to handle text in Aura; There's characters, which are a single 
+There are 2 ways to handle text in Zephyr; There's characters, which are a single 
 [unicode codepoint](https://en.wikipedia.org/wiki/Code_point), and strings, which are lists of characters.
 Character literals may only contain a single character, otherwise a compile-time error is thrown.
 
@@ -47,7 +47,7 @@ Strings may be freely converted into [lists](#lists) of characters, and back.
 
 ### Booleans
 
-Booleans are a way to represent a value which can only be one of 2 things: true or false, yes or no, etc.
+Booleans are a way to represent a value that can only be one of 2 things: true or false, yes or no, etc.
 
 ```ts
 true /* : boolean */
@@ -62,9 +62,9 @@ These are literals which represent a collection or a mapping of other values.
 
 Lists are an indexed, ordered collection of items, all with the same type.
 To avoid having to give a manual type annotation to every list, the type of each item is
-inferred and the item type of the list is set to the most specific type which includes all of its items.
+inferred, and the item type of the list is set to the most specific type that includes all of its items.
 
-Empty lists are automatically inferred to be of type `#[void]`, but can be manually annotated.
+Zephyr infers the type of empty lists as `#[void]`, but can be manually annotated.
 
 ```ts
 #[1, 2, 3] /* : #[int] */
@@ -79,10 +79,10 @@ Empty lists are automatically inferred to be of type `#[void]`, but can be manua
 #### Maps
 
 Maps are a way to represent a key-value relationship between values.
-In a map, each key must be unique, and each of the keys and values must be the same as other keys and values.
+In a map, each key must be unique, and each key and value must be the same as the others.
 
-Type inference works similarly to lists, wherein both the keys and values are inferred to be
-the type which is the greatest common denominator of their values’ types.
+Type inference works similarly to lists, wherein Zephyr infers both the keys and values as
+the type that is their greatest common denominator.
 
 Empty maps are inferred as `#{void: void}`.
 
@@ -124,7 +124,7 @@ The type of a tuple is determined by the type of its elements.
 
 #### Objects
 
-Objects are similar to maps in that they also represent a mapping of keys to values;
+Objects are like maps in that they also represent a mapping of keys to values;
 However, objects require each field to have its name known in advance, and the fields are immutable 
 by default.
 
