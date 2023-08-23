@@ -5,16 +5,18 @@ use std::{
 
 use color_eyre::eyre::Result;
 use itertools::Itertools;
-use pest::{iterators::Pair, iterators::Pairs, pratt_parser::PrattParser};
+use pest::{iterators::Pair, iterators::Pairs, pratt_parser::PrattParser, Parser};
 use pest_derive::Parser;
 use unescape::unescape;
 
 use crate::parser::{
-	ast::{AssignOp, BinaryOp, ObjectData, PostfixOp, PrefixOp, ZephyrExpression, ZephyrType},
+	ast::{
+		AssignOp, BinaryOp, ObjectData, PostfixOp, PrefixOp, ZephyrExpression, ZephyrModule, ZephyrType,
+	},
 	error::ZephyrError,
 };
 
-mod ast;
+pub(crate) mod ast;
 mod error;
 
 #[derive(Parser)]
@@ -55,6 +57,35 @@ lazy_static::lazy_static! {
 
 type ParseResult<'a> = Result<ZephyrExpression<'a>, ZephyrError<'a>>;
 impl ZephyrParser {
+	pub fn parse_module(program: &str) -> Result<ZephyrModule, ZephyrError> {
+		match Self::parse(Rule::module, program) {
+			Ok(mut members) => Ok(ZephyrModule {
+				members: members
+					.next()
+					.unwrap()
+					.into_inner()
+					// removes any EOIs that try to sneak in
+					.filter(|p| !matches!(p.as_rule(), Rule::EOI))
+					.map(Self::parse_let)
+					.map(|res| {
+						res.map(|expr| match expr {
+							ZephyrExpression::Let {
+								name,
+								value,
+								mutable,
+								..
+							} => (name, (mutable, *value)),
+							_ => unreachable!(),
+						})
+					})
+					.try_collect()?,
+			}),
+			Err(e) => Err(ZephyrError::ParseError(
+				e.renamed_rules(Rule::to_string).into(),
+			)),
+		}
+	}
+
 	pub fn parse_expr(pairs: Pairs<Rule>) -> ParseResult {
 		PRATT_PARSER
 			.map_primary(Self::parse_primary)
@@ -342,9 +373,11 @@ impl ZephyrParser {
 	}
 
 	fn parse_let(primary: Pair<Rule>) -> ParseResult {
-		let mut primary = primary.into_inner();
+		let mut primary = primary.into_inner().peekable();
 
-		let mutable = matches!(primary.next().unwrap().as_rule(), Rule::mutable);
+		let mutable = primary
+			.next_if(|pair| matches!(pair.as_rule(), Rule::mutable))
+			.is_some();
 		let name = primary.next().unwrap().as_str();
 
 		let type_def_or_value = primary.next().unwrap();

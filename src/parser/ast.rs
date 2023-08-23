@@ -1,4 +1,4 @@
-use std::collections::{BTreeMap, HashMap};
+use std::collections::BTreeMap;
 use std::fmt::{Debug, Display, Formatter};
 use std::hash::Hash;
 
@@ -14,15 +14,20 @@ pub enum ZephyrValue<'a> {
 	String(&'a str),
 	Boolean(bool),
 	List(Vec<ZephyrValue<'a>>),
-	Map(HashMap<ZephyrValue<'a>, ZephyrValue<'a>>),
+	Map(BTreeMap<ZephyrValue<'a>, ZephyrValue<'a>>),
 	Tuple(Vec<ZephyrValue<'a>>),
-	Object(HashMap<&'a str, ZephyrValue<'a>>),
+	Object(BTreeMap<&'a str, ZephyrValue<'a>>),
 	Void,
 	Closure {
-		params: HashMap<&'a str, ZephyrValue<'a>>,
+		params: BTreeMap<&'a str, ZephyrValue<'a>>,
 		body: ZephyrExpression<'a>,
 		return_type: ZephyrType<'a>,
 	},
+}
+
+#[derive(Debug, Clone, PartialEq, PartialOrd)]
+pub struct ZephyrModule<'a> {
+	pub(crate) members: BTreeMap<&'a str, (bool, ZephyrExpression<'a>)>,
 }
 
 #[derive(Debug, Clone, Eq, PartialEq, Hash, Ord, PartialOrd)]
@@ -286,7 +291,7 @@ impl ToString for Rule {
 	fn to_string(&self) -> String {
 		String::from(match self {
 			Rule::EOI => "end of input",
-			Rule::program => "a program",
+			Rule::module => "a module",
 			Rule::WHITESPACE => "whitespace",
 			Rule::COMMENT => "a comment",
 			Rule::expr => "an expression",
