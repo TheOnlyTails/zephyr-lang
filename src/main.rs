@@ -11,12 +11,14 @@ mod parser;
 fn main() -> eyre::Result<()> {
 	color_eyre::install()?;
 
-	match ZephyrParser::parse_module("\
+	match ZephyrParser::parse_module(
+		"\
 let x = 1;
 let y = 2;\
-") {
+",
+	) {
 		Ok(module) => println!("{:#?}", module),
-		Err(e) => println!("{}", e)
+		Err(e) => println!("{}", e),
 	}
 
 	/*for line in io::stdin().lock().lines() {

@@ -1,6 +1,6 @@
 use inkwell::{builder::Builder, context::Context, module::Module};
-use rand::{Rng, thread_rng};
 use rand::distributions::Alphanumeric;
+use rand::{thread_rng, Rng};
 
 use crate::parser::ast::ZephyrModule;
 use crate::parser::Rule::char;
