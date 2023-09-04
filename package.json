@@ -11,7 +11,7 @@
   "devDependencies": {
     "lightningcss": "^1.21.7",
     "vite": "^4.4.9",
-    "vitepress": "1.0.0-rc.4",
+    "vitepress": "1.0.0-rc.10",
     "vue": "3.3.4"
   },
   "pnpm": {
