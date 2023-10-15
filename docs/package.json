@@ -1,0 +1,22 @@
+{
+  "name": "zephyr-lang-docs",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vitepress dev docs",
+    "build": "vitepress build docs",
+    "serve": "vitepress serve docs"
+  },
+  "devDependencies": {
+    "prettier": "^3.0.3",
+    "vitepress": "1.0.0-rc.21",
+    "vue": "3.3.4"
+  },
+  "pnpm": {
+    "peerDependencyRules": {
+      "ignoreMissing": [
+        "@algolia/client-search"
+      ]
+    }
+  }
+}
