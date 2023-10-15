@@ -1,0 +1,15 @@
+let int = 100
+let bin_int = 0b100101
+let hex_int = 0xABCD
+let sci_int = 23e4
+let float = 20.0
+let sci_float = 6.022e23
+let char = 'a'
+let string = "hello world"
+let list = #[1, 2, 3]
+let map = #{'a': 1, 'b': 2, 'c': 3}
+let tuple = #('a', 1, "hello")
+let object = @{
+    name: string = "Tails",
+    mut age: int = 16,
+}

@@ -1,0 +1,19 @@
+[versions]
+kotlin = "1.9.10"
+mordant = "2.2.0"
+antlr = "4.13.1"
+fuzzy = "0.9.0"
+ktoml = "0.5.0"
+semver = "1.4.2"
+okio = "3.6.0"
+
+[libraries]
+kotlinx-serialization = { group = "org.jetbrains.kotlin", name = "kotlin-serialization", version.ref = "kotlin" }
+okio = { group = "com.squareup.okio", name = "okio", version.ref = "okio" }
+mordant = { group = "com.github.ajalt.mordant", name = "mordant", version.ref = "mordant" }
+antlr = { group = "org.antlr", name = "antlr4", version.ref = "antlr" }
+antlr-runtime = { group = "org.antlr", name = "antlr4-runtime", version.ref = "antlr" }
+fuzzy = { group = "com.willowtreeapps", name = "fuzzywuzzy-kotlin", version.ref = "fuzzy" }
+ktoml-core = { group = "com.akuleshov7", name = "ktoml-core", version.ref = "ktoml" }
+ktoml-file = { group = "com.akuleshov7", name = "ktoml-file", version.ref = "ktoml" }
+semver = { group = "io.github.z4kn4fein", name = "semver", version.ref = "semver" }
