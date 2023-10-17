@@ -8,7 +8,7 @@ hero:
   actions:
     - theme: brand
       text: Get Started
-      link: /guide/
+      link: /guide/what-is-zephyr
     - theme: alt
       text: View on GitHub
       link: https://github.com/theonlytails/zehpyr-lang

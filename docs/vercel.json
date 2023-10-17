@@ -1,5 +1,6 @@
 {
   "cleanUrls": true,
   "framework": "vitepress",
-  "trailingSlash": true
+  "trailingSlash": true,
+  "outputDirectory": ".vitepress/dist"
 }

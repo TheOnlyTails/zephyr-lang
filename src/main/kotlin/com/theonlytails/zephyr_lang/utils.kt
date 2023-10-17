@@ -37,10 +37,8 @@ fun findParentWithFile(startPath: Path, fileName: String): Path? {
     // Go up the directory tree until the root
     var parent: Path? = startPath
     while (parent != null) {
-        if (FileSystem.SYSTEM.exists(parent / fileName) && (parent / fileName)) {
-            return parent // Return the parent directory that contains the file
-        }
-
+        // Return the parent directory that contains the file
+        if ((parent / fileName).isRegularFile) return parent
         parent = parent.parent
     }
 
@@ -51,12 +49,7 @@ fun findParentWithFile(startPath: Path, fileName: String): Path? {
 object URLSerializer : KSerializer<URL> {
     override val descriptor = PrimitiveSerialDescriptor("URL", PrimitiveKind.STRING)
 
-    override fun deserialize(decoder: Decoder): URL {
-        @Suppress("DEPRECATION")
-        return URL(decoder.decodeString())
-    }
+    override fun deserialize(decoder: Decoder) = @Suppress("DEPRECATION") URL(decoder.decodeString())
 
-    override fun serialize(encoder: Encoder, value: URL) {
-        encoder.encodeString(value.toString())
-    }
+    override fun serialize(encoder: Encoder, value: URL) = encoder.encodeString(value.toString())
 }

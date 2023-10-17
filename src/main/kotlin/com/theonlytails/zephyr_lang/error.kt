@@ -6,7 +6,7 @@ import com.theonlytails.zephyr_lang.stdlib.StdlibModule
 import com.willowtreeapps.fuzzywuzzy.diffutils.FuzzySearch
 import okio.Path
 
-data class MultiException(inline val errors: Collection<Throwable>) :
+internal data class MultiException(inline val errors: Collection<Throwable>) :
     Throwable(errors.joinToString("\n") { it.message ?: "" })
 
 sealed class ZephyrError(message: String) : Throwable(TextColors.red(message)) {
