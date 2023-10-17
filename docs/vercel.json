@@ -2,5 +2,10 @@
   "cleanUrls": true,
   "framework": "vitepress",
   "trailingSlash": true,
-  "outputDirectory": ".vitepress/dist"
+  "outputDirectory": ".vitepress/dist",
+  "git": {
+    "deploymentEnabled": {
+      "main": false
+    }
+  }
 }
