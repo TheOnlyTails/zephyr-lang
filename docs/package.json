@@ -10,9 +10,9 @@
   "devDependencies": {
     "lightningcss": "^1.22.0",
     "prettier": "^3.0.3",
-    "vitepress": "1.0.0-rc.22",
+    "vitepress": "1.0.0-rc.24",
     "vitepress-sidebar": "^1.18.0",
-    "vue": "3.3.4"
+    "vue": "3.3.6"
   },
   "pnpm": {
     "peerDependencyRules": {
