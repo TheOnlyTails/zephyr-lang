@@ -1,0 +1,289 @@
+use ordered_float::OrderedFloat;
+use std::collections::BTreeMap;
+use crate::parser::{ast::{Expr, StringComponent, ObjectData, VariableData, operators::{AssignOp, PrefixOp, BinaryOp, PostfixOp}, types::TypeDef}, token::{LexerError, Token}};
+
+#[LALR]
+grammar<'input>();
+
+extern {
+    type Location = usize;
+    type Error = LexerError;
+
+    enum Token<'input> {
+        "int" => Token::Int(<u64>),
+        "float" => Token::Float(<OrderedFloat<f64>>),
+        "char" => Token::Char(<char>),
+        "string" => Token::String(<Vec<StringComponent<'input>>>),
+        "boolean" => Token::Boolean(<bool>),
+        "identifier" => Token::Identifier(<&'input str>),
+        "#[" => Token::ListStart,
+        "#{" => Token::MapStart,
+        "#(" => Token::TupleStart,
+        "{|" => Token::ObjectStart,
+        "|}" => Token::ObjectEnd,
+        "let" => Token::Let,
+        "func" => Token::Func,
+        "struct" => Token::Struct,
+        "mut" => Token::Mut,
+        "if" => Token::If,
+        "else" => Token::Else,
+        "while" => Token::While,
+        "for" => Token::For,
+        "import" => Token::Import,
+        "with" => Token::With,
+        "as" => Token::As,
+        "return" => Token::Return,
+        "int_type" => Token::IntType,
+        "float_type" => Token::FloatType,
+        "string_type" => Token::StringType,
+        "char_type" => Token::CharType,
+        "boolean_type" => Token::BooleanType,
+        "void_type" => Token::VoidType,
+        "+" => Token::Plus,
+        "-" => Token::Minus,
+        "*" => Token::Times,
+        "/" => Token::Divide,
+        "%" => Token::Modulus,
+        "**" => Token::Power,
+        "&&" => Token::And,
+        "||" => Token::Or,
+        "&" => Token::BitAnd,
+        "|" => Token::BitOr,
+        "^" => Token::BitXor,
+        "<<" => Token::LeftShift,
+        ">>" => Token::RightShift,
+        ".." => Token::RangeTo,
+        "..=" => Token::RangeToEquals,
+        "in" => Token::In,
+        "!in" => Token::NotIn,
+        "is" => Token::Is,
+        "!is" => Token::NotIs,
+        ">" => Token::GreaterThan,
+        ">=" => Token::GreaterEquals,
+        "<" => Token::LessThan,
+        "<=" => Token::LessEquals,
+        "==" => Token::Equals,
+        "!=" => Token::NotEquals,
+        "+=" => Token::PlusAssign,
+        "-=" => Token::MinusAssign,
+        "*=" => Token::TimesAssign,
+        "/=" => Token::DivideAssign,
+        "%=" => Token::ModulusAssign,
+        "**=" => Token::PowerAssign,
+        "&&=" => Token::AndAssign,
+        "||=" => Token::OrAssign,
+        "&=" => Token::BitAndAssign,
+        "|=" => Token::BitOrAssign,
+        "^=" => Token::BitXorAssign,
+        "<<=" => Token::LeftShiftAssign,
+        ">>=" => Token::RightShiftAssign,
+        "->" => Token::Arrow,
+        "++" => Token::Increment,
+        "--" => Token::Decrement,
+        "(" => Token::LeftParen,
+        ")" => Token::RightParen,
+        "[" => Token::LeftBracket,
+        "]" => Token::RightBracket,
+        "{" => Token::LeftBrace,
+        "}" => Token::RightBrace,
+        "!" => Token::Exclamation,
+        "?" => Token::QuestionMark,
+        "." => Token::Period,
+        "," => Token::Comma,
+        "\\" => Token::Backslash,
+        "@" => Token::AtSign,
+        "#" => Token::Hash,
+        "$" => Token::DollarSign,
+        "_" => Token::Underscore,
+        "=" => Token::EqualSign,
+        "'" => Token::Apostrophe,
+        "\"" => Token::Quote,
+        "~" => Token::Tilde,
+        "`" => Token::Backtick,
+        ";" => Token::Semicolon,
+        ":" => Token::Colon,
+    }
+}
+
+Comma<T>: Vec<T> = {
+    <mut v:(<T> ",")*> <e:T?> => match e {
+        None => v,
+        Some(e) => {
+            v.push(e);
+            v
+        }
+    }
+};
+
+TypeDef: TypeDef<'input> = {
+    "int_type" => TypeDef::Int,
+    "float_type" => TypeDef::Float,
+    "char_type" => TypeDef::Char,
+    "string_type" => TypeDef::String,
+    "boolean_type" => TypeDef::Boolean,
+    "void_type" => TypeDef::Void,
+    "#[" <TypeDef> "]" => TypeDef::List(<>.into()),
+    "#{" <k:TypeDef> ":" <v:TypeDef> "}" => TypeDef::Map(k.into(), v.into()),
+    "#(" <Comma<TypeDef>> ")" => TypeDef::Tuple(<>),
+    "{|" <Comma<(<"identifier"> ":" <TypeDef>)>> "|}" => TypeDef::Object(<>.into_iter().map(|t| (t.0, t.1.into())).collect::<BTreeMap<_, _>>())
+};
+
+ObjectEntry: (&'input str, ObjectData<'input>) = {
+    <mutable:"mut"?> <name:"identifier"> <type_def:(":" <TypeDef>)?> "=" <value:Expr> => (name, ObjectData {
+        value,
+        mutable: mutable.is_some(),
+        type_def
+  })
+};
+
+AssignOp: AssignOp = {
+    "=" => AssignOp::None,
+    "+=" => AssignOp::Plus,
+    "-=" => AssignOp::Minus,
+    "*=" => AssignOp::Times,
+    "/=" => AssignOp::Divide,
+    "%=" => AssignOp::Modulus,
+    "**=" => AssignOp::Power,
+    "&&=" => AssignOp::And,
+    "||=" => AssignOp::Or,
+    "&=" => AssignOp::BitAnd,
+    "|=" => AssignOp::BitOr,
+    "^=" => AssignOp::BitXor,
+    "<<=" => AssignOp::LeftShift,
+    ">>=" => AssignOp::RightShift,
+};
+
+Operand: Expr<'input> = {
+    "int" => Expr::Int(<>),
+    "float" => Expr::Float(<>),
+    "boolean" => Expr::Boolean(<>),
+    "char" => Expr::Char(<>),
+    "string" => Expr::String(<>),
+    "identifier" => Expr::Ident(<>),
+    "#[" <Comma<Expr>> "]" => Expr::List(<>),
+    "#{" <Comma<(<Expr> ":" <Expr>)>> "}" => Expr::Map(<>.into_iter().collect::<_>()),
+    "#(" <Comma<Expr>> ")" => Expr::Tuple(<>),
+    "{|" <Comma<ObjectEntry>> "|}" => Expr::Object(<>.into_iter().collect::<_>()),
+    "(" <Expr> ")" => <>,
+};
+
+PrimaryExpr: Expr<'input> = {
+    <callee:PrimaryExpr> "(" <args:Comma<(<(<"identifier"> "=")?> <PrimaryExpr>)>> ")" => Expr::Call { callee: callee.into(), args },
+    <parent:PrimaryExpr> "." <member:"identifier"> => Expr::MemberAccess { parent: parent.into(), member },
+    <parent:PrimaryExpr> "[" <index:PrimaryExpr> "]" => Expr::IndexAccess { parent: parent.into(), index: index.into() },
+    Operand => <>
+};
+
+pub(crate) Expr: Expr<'input> = {
+    #[precedence(level="0")]
+    PrimaryExpr => <>,
+
+    // Unary operators
+    #[precedence(level="1")]
+    <Expr> "++" => Expr::PostfixOp { op: PostfixOp::Increment, expr: <>.into() },
+    #[precedence(level="1")]
+    <Expr> "--" => Expr::PostfixOp { op: PostfixOp::Decrement, expr: <>.into() },
+
+    #[precedence(level="2")]
+    "-" <Expr> => Expr::PrefixOp { op: PrefixOp::Negate, expr: <>.into() },
+    #[precedence(level="2")]
+    "!" <Expr> => Expr::PrefixOp { op: PrefixOp::Not, expr: <>.into() },
+
+    // Casts and type checks
+    #[precedence(level="3")] #[assoc(side="left")]
+    <expr:Expr> "as" <to_type:TypeDef> => Expr::Cast { expr: expr.into(), to_type },
+
+    // Exponents
+    #[precedence(level="4")] #[assoc(side="right")]
+    <lhs:Expr> "**" <rhs:Expr> => Expr::BinaryOp { op: BinaryOp::Power, lhs: lhs.into(), rhs: rhs.into() },
+
+    // Multiplication, division, modulus
+    #[precedence(level="5")] #[assoc(side="left")]
+    <lhs:Expr> "*" <rhs:Expr> => Expr::BinaryOp { op: BinaryOp::Times, lhs: lhs.into(), rhs: rhs.into() },
+    #[precedence(level="5")] #[assoc(side="left")]
+    <lhs:Expr> "/" <rhs:Expr> => Expr::BinaryOp { op: BinaryOp::Divide, lhs: lhs.into(), rhs: rhs.into() },
+    #[precedence(level="5")] #[assoc(side="left")]
+    <lhs:Expr> "%" <rhs:Expr> => Expr::BinaryOp { op: BinaryOp::Modulus, lhs: lhs.into(), rhs: rhs.into() },
+
+    // Addition, subtraction
+    #[precedence(level="6")] #[assoc(side="left")]
+    <lhs:Expr> "+" <rhs:Expr> => Expr::BinaryOp { op: BinaryOp::Plus, lhs: lhs.into(), rhs: rhs.into() },
+    #[precedence(level="6")] #[assoc(side="left")]
+    <lhs:Expr> "-" <rhs:Expr> => Expr::BinaryOp { op: BinaryOp::Minus, lhs: lhs.into(), rhs: rhs.into() },
+
+    // Bit shifts
+    #[precedence(level="7")] #[assoc(side="left")]
+    <lhs:Expr> "<<" <rhs:Expr> => Expr::BinaryOp { op: BinaryOp::LeftShift, lhs: lhs.into(), rhs: rhs.into() },
+    #[precedence(level="7")] #[assoc(side="left")]
+    <lhs:Expr> ">>" <rhs:Expr> => Expr::BinaryOp { op: BinaryOp::RightShift, lhs: lhs.into(), rhs: rhs.into() },
+
+    // Bitwise AND
+    #[precedence(level="8")] #[assoc(side="left")]
+    <lhs:Expr> "&" <rhs:Expr> => Expr::BinaryOp { op: BinaryOp::BitAnd, lhs: lhs.into(), rhs: rhs.into() },
+
+    // Bitwise XOR
+    #[precedence(level="9")] #[assoc(side="left")]
+    <lhs:Expr> "^" <rhs:Expr> => Expr::BinaryOp { op: BinaryOp::BitXor, lhs: lhs.into(), rhs: rhs.into() },
+
+    // Bitwise OR
+    #[precedence(level="10")] #[assoc(side="left")]
+    <lhs:Expr> "|" <rhs:Expr> => Expr::BinaryOp { op: BinaryOp::BitOr, lhs: lhs.into(), rhs: rhs.into() },
+
+    // Named checks
+    #[precedence(level="11")] #[assoc(side="none")]
+    <expr:Expr> "is" <is_type:TypeDef> => Expr::TypeCheck { expr: expr.into(), is_type, negated: false },
+    #[precedence(level="11")] #[assoc(side="none")]
+    <expr:Expr> "!is" <is_type:TypeDef> => Expr::TypeCheck { expr: expr.into(), is_type, negated: true },
+    #[precedence(level="11")] #[assoc(side="none")]
+    <lhs:Expr> "in" <rhs:Expr> => Expr::BinaryOp { op: BinaryOp::In, lhs: lhs.into(), rhs: rhs.into() },
+    #[precedence(level="11")] #[assoc(side="none")]
+    <lhs:Expr> "!in" <rhs:Expr> => Expr::BinaryOp { op: BinaryOp::NotIn, lhs: lhs.into(), rhs: rhs.into() },
+
+    // Comparison operators
+    #[precedence(level="12")] #[assoc(side="none")]
+    <lhs:Expr> ">" <rhs:Expr> => Expr::BinaryOp { op: BinaryOp::GreaterThan, lhs: lhs.into(), rhs: rhs.into() },
+    #[precedence(level="12")] #[assoc(side="none")]
+    <lhs:Expr> ">=" <rhs:Expr> => Expr::BinaryOp { op: BinaryOp::GreaterThanEquals, lhs: lhs.into(), rhs: rhs.into() },
+    #[precedence(level="12")] #[assoc(side="none")]
+    <lhs:Expr> "<" <rhs:Expr> => Expr::BinaryOp { op: BinaryOp::LessThan, lhs: lhs.into(), rhs: rhs.into() },
+    #[precedence(level="12")] #[assoc(side="none")]
+    <lhs:Expr> "<=" <rhs:Expr> => Expr::BinaryOp { op: BinaryOp::LessThanEquals, lhs: lhs.into(), rhs: rhs.into() },
+
+    // Equality Operators
+    #[precedence(level="13")] #[assoc(side="none")]
+    <lhs:Expr> "==" <rhs:Expr> => Expr::BinaryOp { op: BinaryOp::Equals, lhs: lhs.into(), rhs: rhs.into() },
+    #[precedence(level="13")] #[assoc(side="none")]
+    <lhs:Expr> "!=" <rhs:Expr> => Expr::BinaryOp { op: BinaryOp::NotEquals, lhs: lhs.into(), rhs: rhs.into() },
+
+    // Boolean And
+    #[precedence(level="14")] #[assoc(side="left")]
+    <lhs:Expr> "&&" <rhs:Expr> => Expr::BinaryOp { op: BinaryOp::And, lhs: lhs.into(), rhs: rhs.into() },
+
+    // Boolean Or
+    #[precedence(level="15")] #[assoc(side="left")]
+    <lhs:Expr> "||" <rhs:Expr> => Expr::BinaryOp { op: BinaryOp::Or, lhs: lhs.into(), rhs: rhs.into() },
+
+    // Boolean Or
+    #[precedence(level="16")] #[assoc(side="none")]
+    <lhs:Expr> ".." <rhs:Expr> => Expr::BinaryOp { op: BinaryOp::RangeTo, lhs: lhs.into(), rhs: rhs.into() },
+    #[precedence(level="16")] #[assoc(side="none")]
+    <lhs:Expr> "..=" <rhs:Expr> => Expr::BinaryOp { op: BinaryOp::RangeToEquals, lhs: lhs.into(), rhs: rhs.into() },
+
+    // Assignment
+    #[precedence(level="17")] #[assoc(side="right")]
+    <ident:"identifier"> <op:AssignOp> <new:Expr> => Expr::Assignment { ident, op, new: new.into() },
+
+    // Recursive expressions
+    #[precedence(level="18")] #[assoc(side="none")]
+    "return" <Expr> => Expr::Return(<>.into()),
+    #[precedence(level="18")] #[assoc(side="none")]
+    "(" <params:Comma<(<"identifier"> ":" <TypeDef>)>> ")" <return_type:(":" <TypeDef>)?> "->" <body:Expr> => {
+        Expr::Closure { params: params.into_iter().collect::<_>(), return_type, body: body.into() }
+    },
+    #[precedence(level="18")] #[assoc(side="none")]
+    "let" <mutable:"mut"?> <name:"identifier"> <type_def:(":" <TypeDef>)?> "=" <value:Expr> => Expr::Let(name, VariableData {
+        mutable: mutable.is_some(),
+        value: value.into(),
+        type_def
+    }),
+}

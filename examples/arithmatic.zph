@@ -1,0 +1,6 @@
+let sum = 1 + 2        // = 3
+let difference = 2 - 1 // = 1
+let product = 2 * 3    // = 6
+let quotient = 8 / 2   // = 4
+let remainder = 8 % 3  // = 2
+let exponent = 2 ** 5  // = 32
