@@ -1,6 +1,6 @@
-import { defineConfig } from "vitepress"
+import { defineConfig } from "vitepress";
 
-const pkg = require("../../package.json")
+import pkg from "../../package.json" with { type: "json" };
 
 // https://vitepress.vuejs.org/config/app-configs
 export default defineConfig({
@@ -29,12 +29,22 @@ export default defineConfig({
 				]
 			}
 		],
+		sidebar: [
+			{
+				text: "Guide",
+				items: [
+					{ text: "Getting Started", link: "/guide/" },
+					{ text: "Literals", link: "/guide/literals" }
+				]
+			}
+		],
 		search: {
 			provider: "local"
 		}
 	},
 	markdown: {
-		lineNumbers: true
+		lineNumbers: true,
+		theme: "dracula"
 	},
 	head: [["meta", { name: "theme-color", content: "#af3dcb" }]],
 	lastUpdated: true,
@@ -42,4 +52,4 @@ export default defineConfig({
 	sitemap: {
 		hostname: "https://zephyr-lang.vercel.app"
 	}
-})
+});

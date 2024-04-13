@@ -1,10 +1,9 @@
 ---
 title: Literals
 ---
+# Literals
 
 In Zephyr, everything is an expression, so it can evaluate to a value.
-
-## Literals
 
 Literals are a class of constructs that declare a specific value up-front, be it numbers, text,
 or collections of other values.
@@ -47,7 +46,7 @@ Strings may be freely converted into [lists](#lists) of characters, and back.
 
 ### Booleans
 
-Booleans are a way to represent a value that can only be one of 2 things: true or false, yes or no, etc.
+Booleans are values that can only be true or false.
 
 ```ts
 true /* : boolean */
@@ -128,19 +127,19 @@ Objects are like maps in that they also represent a mapping of keys to values;
 However, objects require each field to have its name known in advance, and the fields are immutable 
 by default.
 
-To create an object, use the `@{}` syntax:
+To create an object, use the `{| |}` syntax:
 ```ts
-@{}
+{| |}
 ```
 
 Each field consists of a name (which may be any valid identifier), a colon, and its value.
 The fields must be separated by commas.
 
 ```ts
-@{
+{|
   a: 1,
   b: 3,
   hello: "Hello world!",
-}
+|}
 ```
 
