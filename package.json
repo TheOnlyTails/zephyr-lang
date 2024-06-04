@@ -12,7 +12,7 @@
 		"lightningcss": "^1.24.1",
 		"prettier": "^3.2.5",
 		"vite": "^5.2.8",
-		"vitepress": "1.2.2",
+		"vitepress": "1.2.3",
 		"vue": "3.4.27"
 	},
 	"pnpm": {
